@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Fire in Focus</title>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab" onclick="showTab('introduction')">Introduction</div>
+            <div class="tab" onclick="showTab('data-exploration')">Data Exploration</div>
+            <div class="tab" onclick="showTab('models-implemented')">Models Implemented</div>
+            <div class="tab" onclick="showTab('conclusion-results')">Conclusion</div>
+            <div class="tab" onclick="showTab('team')">Team</div>
+        </div>
+        
+        <div id="introduction" class="tab-content">
+            <h1>Fire in Focus: A Deep Learning Approach to Analyzing Wildfires</h1>
+            <h2>The Nature of the topic</h2>
+            <p>Wildfires are natural disasters that occur in regions experiencing extreme heat and dry conditions, significantly impacting both human society and the 
+                environment. This project focuses on collecting and analyzing wildfire data from the United States to predict future occurrences. Our insights have led 
+                us to understand that wildfires pose a serious threat, making it crucial for people to be prepared for potential dangers. This understanding serves as 
+                the backbone of our project. We aim to develop a predictive analysis to ensure that we are prepared to face any potential risks. Our goal is to leverage wildfire 
+                data to develop a predictive model that forecasts when and where wildfires are likely to occur and spread in the United States. This will ensure that hospitalization
+                facilities are available when needed. In the long term, it could save lives by reducing the impact of future wildfire events.</p>
+            <div class="image-container">
+                <img src="images/wildfire_image1.png" alt="Wildfire in California">
+                <p class="caption">The figure above is from the worst wildfire in the United States, which broke out in California in 2020.</p>
+            </div>
+            <h2>Why Wildfire Analysis is Important?</h2>
+            <p>The main goal of this project is to benefit the people of the USA from wildfire threats. Wildfires are a serious concern due to their potential to cause 
+                innocent deaths, highlighting the urgent need to develop a model for predicting future events. Ultimately, our project could reduce the number of lives 
+                lost during wildfire incidents.
+                Wildfires are increasingly common due to climate change. The diverse terrain and highly urbanized land in the USA make it particularly vulnerable. Wildfires are spreading across grasslands and vegetated areas, putting a significant amount of agricultural land at risk. This can lead to desertification, soil erosion, changes in water runoff, altered precipitation patterns, and reduced soil quality in affected regions.
+                When nations destroy their flora, they miss out on economic opportunities. Furthermore, wildfires alter landscapes and destroy natural attractions. This project has the potential to serve as a model for all countries facing similar challenges.
+                Finally, this project is also focused on safeguarding the environment. We aim to prevent wildfires from destroying vast areas of land. Wildfires not only devastate vegetation but also harm wildlife, thereby threatening biodiversity. The fire-prone areas in the USA serve as habitats for various species, and losing these habitats could significantly impact our ecosystem.
+            </p>
+            <div class="image-container">
+                <img src="images/wildfire_image2.jpg" alt="Wildfire in California">
+                <p class="caption">The above picture depicts the agriculture land lost during a wildfire in California 
+                    2020.
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="images/wildfire_image3.png" alt="Wildfire in California">
+                <p class="caption">The table above illustrates the frequency of wildfire events and the acres burned each year in the United States.
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="images/wildfire_image4.png" alt="Wildfire in California">
+                <p class="caption">The graph above depicts the federal annual wildfire suppression costs for 1983-2021.
+                </p>
+            </div>
+            <h2>Who is Affected?</h2>
+            <p>Wildfires are catastrophic events that impact people and communities, leaving a long lasting impact on landscape and society. Residents in fire-prone 
+                areas are affected the most and often live near wildlands, where the risk of wildfire is significantly high. When a wildfire occurs, these people face 
+                immediate danger to their lives, and property. Beyond the physical threat they endure the psychological toll of loss of property, evacuation and 
+                uncertainty. The destruction of homes and loss of personal belongings lead to a great sense of loss and trauma. Many families require physical 
+                rebuilding and emotional healing as they deal with the trauma of the experience. In such emergencies, firefighters and emergency personnel play a 
+                critical role but face high risks from wildfires. These individuals put their lives at risk to protect people and nature from the destructive fire. 
+                The physical and mental strain of battling wildfires can be immense, leading to burnout, exhaustion, and in some cases, post-traumatic stress disorder 
+                (PTSD). Firefighters often work long hours in hazardous conditions, facing extreme heat and unpredictable fire behavior. Their efforts are crucial and 
+                often lack sufficient resources and support, which can hinder their ability to respond effectively to fires. The psychological impact of witnessing 
+                destruction and loss can also affect their well-being so it is important to create support systems for those at the frontline.
+                </p>
+                <div class="image-container">
+                    <img src="images/wildfire_image5.png" alt="Wildfire in California">
+                    <p class="caption">Civilians and first responders utilize a temporary refuge area established in a parking lot to stay safe during a Fire.
+                    </p>
+                </div>
+                <p>
+                    During and after a wildfire, local and state governments bear responsibility for resource allocation and ensuring public safety. These authorities must take critical
+                     decisions about evacuations, resource deployment, and maintain clear communication with the public. Firefighting efforts pose a financial burden and can strain
+                      budgets, leading to tough choices about where to allocate funds in the wake of a disaster. Recovery efforts require long-term planning and investment in rebuilding
+                       infrastructure, which can take years to achieve. Government agencies need to collaborate with various stakeholders, including organizations and environmental 
+                       groups, to effectively manage recovery and restoration 
+                    efforts
+                </p>
+                <div class="image-container">
+                    <img src="images/wildfire_image6.png" alt="Wildfire in California">
+                    <p class="caption">A firefighter battling the Creek Fire in the Cascadel Woods neighborhood of Madera County, California
+                    </p>
+                </div>
+                <p>
+                    Wildfires do not just affect people and nature but also entire ecosystems and wildlife. Many species are displaced or killed in fire events, leading
+                     to declines in biodiversity and disruptions in food chains. Studies about the Australia bushfire in January 2020 show that nearly 3 billion animals 
+                     were killed or displaced.  Forests and grasslands that are crucial for carbon capture and the air quality may take years or decades to recover. The 
+                     loss of vegetation can also lead to soil erosion and increased runoff, which can affect water quality in nearby streams and rivers. The long-term
+                      ecological consequences of wildfires require a holistic approach to land management, considering human needs and also the health of the ecosystems 
+                      that sustain us.
+
+                </p>
+                <div class="image-container">
+                    <img src="images/wildfire_image7.png" alt="Wildfire in California">
+                    <p class="caption">Housing subdivision Coffey Park, Santa Rosa leveled by flames
+                    </p>
+                </div>
+                <p>
+                    Industries such as real estate, agriculture, and tourism are significantly affected by wildfires. Farmers may lose crops and livestock, leading to
+                     financial hardships and food supply disruptions. The tourism industry can suffer as natural attractions become inaccessible or damaged. This 
+                     impacts local economies that rely on visitors. In areas where property values depend on how close they are to natural landscapes, wildfires can 
+                     lead to a decline in real estate markets, as potential buyers become scared to invest in areas with fire risks. Wildfires create a ripple effect 
+                     that extends far and wide, underscoring the necessity for effective risk mitigation and management strategies that address the diverse needs of all
+                      affected stakeholders.
+                </p>
+                <div class="image-container">
+                    <img src="images/wildfire_image8.png" alt="Wildfire in California">
+                    <p class="caption">Proportion of Total Economic Impact Borne By Different Societal Segments from a  San Diego County Study
+                    </p>
+                </div>
+            <h2>What has been done so far and what are the gaps?</h2>
+            <p></p>
+            <img src="wildfire_image4.jpg" alt="Fire Management Strategies">
+            <h2>Research Questions</h2>
+            <ol>
+                <li>How confident are the satellite information that give us wildfire data</li>
+                <li>What are the different instruments and satellites used for wildfire imagery</li>
+                <li>What are the different hotspots? Is it vegetation? Volcano? Other static land source? Offshore detection?</li>
+                <li>Wildfire pattern across USA from 2000-2024</li>
+                <li>Were wildfire rates consistent across each year?</li>
+                <li>Which State in USA has had the most number of wildfires since 2000?</li>
+                <li>Wildfire pattern across the state with most wildfires from 2000-2024</li>
+                <li>Is the above trend similar to that of USA as a whole?</li>
+                <li>Which months of the year on an average have had the most wildfires for that state</li>
+                <li>Is there a correlation with the temperature during those months and the wildfire frequency?</li>
+            </ol>
+        </div>
+
+        <div id="data-exploration" class="tab-content">
+            <h1>Data Exploration</h1>
+            <p>No content required for Milestone 1.</p>
+        </div>
+
+        <div id="models-implemented" class="tab-content">
+            <h1>Models Implemented</h1>
+            <p>No content required for Milestone 1.</p>
+        </div>
+
+        <div id="conclusion-results" class="tab-content">
+            <h1>Conclusion & Results</h1>
+            <p>No content required for Milestone 1.</p>
+        </div>
+
+        <div id="team" class="tab-content">
+            <h1>Meet Our Team</h1>
+            <div class="team-member">
+                <img src="images/olan.jpeg" alt="Team Member 1">
+                <h2>Olan Pinto</h2>
+                <a href="https://www.linkedin.com/in/olan-pinto/">LinkedIn</a>
+            </div>
+            <div class="team-member">
+                <img src="images/abhiram.jpeg" alt="Team Member 2">
+                <h2>Abhiram Venkatarangan</h2>
+                <a href="https://www.linkedin.com/in/abhiram-m-v-4a0413182/">LinkedIn</a>
+            </div>
+            <div class="team-member">
+                <img src="images/rissi.jpg" alt="Team Member 3">
+                <h2>Rissi Kumar Prabhakaran</h2>
+                <a href="https://www.linkedin.com/in/rissi-kumar-prabhakaran/">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none'); // Hide all tabs
+            document.getElementById(tabId).style.display = 'block'; // Show the selected tab
+        }
+
+        // Show the introduction tab by default
+        showTab('introduction');
+    </script>
+</body>
+</html>
