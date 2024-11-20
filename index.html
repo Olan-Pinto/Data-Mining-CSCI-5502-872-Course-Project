@@ -893,8 +893,8 @@
                 <p><strong>Computational Complexity:</strong> SVMs are computationally expensive for large datasets and complex kernel functions. Training involves solving a quadratic optimization problem, which scales poorly with the number of data samples. This makes SVM less suitable for massive datasets unless simpler approximations like Linear SVM are used. The high computational cost is a trade-off for SVM’s ability to handle non-linear, separable data.</p>
                 
                 <div class="image-container">
-                    <img src="./Results/SVM/baseline_train_acc.png" alt="Baseline Training Accuracy">
-                    <img src="./Results/SVM/baseline_eval.png" alt="Baseline Model Results">
+                    <img src="./Results/svm/baseline_train_acc.png" alt="Baseline Training Accuracy">
+                    <img src="./Results/svm/baseline_eval.png" alt="Baseline Model Results">
                 </div>
     
                 <h3>Hyperparameter Tuning with RandomizedSearchCV</h3>
@@ -911,7 +911,7 @@
                 <h3>Tuned Hyperparameters</h3>
 
                 <div class="image-container">
-                    <img src="./Results/SVM/hyperparameter_tuning.png" alt="Hyperparameters">
+                    <img src="./Results/svm/hyperparameter_tuning.png" alt="Hyperparameters">
                 </div>
 
                 <ul>
@@ -926,15 +926,15 @@
                 <h3>Results After Tuning</h3>
 
                 <div class="image-container">
-                    <img src="./Results/SVM/best_hyperparameters.png" alt="Hyperparameter tuning results">
+                    <img src="./Results/svm/best_hyperparameters.png" alt="Hyperparameter tuning results">
                     <p class="caption">These are the best hyperparameters obtained after tuning.</p>
                 </div>
 
                 <p>Below are the results of the tuned model on the training and testing data. We can see an improvement in the training accuracy</p>
 
                 <div class="image-container">
-                    <img src="./Results/SVM/tuned_model_training_acc.png" alt="Tuned model training accuracy">
-                    <img src="./Results/SVM/tuned_model_results.png" alt="Tuned model testing accuracy">
+                    <img src="./Results/svm/tuned_model_training_acc.png" alt="Tuned model training accuracy">
+                    <img src="./Results/svm/tuned_model_results.png" alt="Tuned model testing accuracy">
                 </div>
 
                 <p>After hyperparameter optimization using RandomizedSearchCV, the SVM model demonstrated significant improvement across all evaluation metrics:</p>
@@ -944,8 +944,8 @@
                 </ul>
                 
                 <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
-                    <img src="./Results/SVM/feature_importance.png" alt="Feature Importance" style="flex: 1; max-width: 45%;">
-                    <img src="./Results/SVM/roc_auc_curve.png" alt="ROC-AUC Curve and Score" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/svm/feature_importance.png" alt="Feature Importance" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/svm/roc_auc_curve.png" alt="ROC-AUC Curve and Score" style="flex: 1; max-width: 45%;">
                 </div>
     
                 <p>The tuned model’s performance validates the effectiveness of hyperparameter tuning in addressing SVM's sensitivity to data and parameter configurations. While the false positive rate remains an area for improvement, the overall enhancements in metrics demonstrate the value of careful optimization.</p>
@@ -957,8 +957,8 @@
                 <p>When building a Random Forest Model for the purpose of wildfire prediction, we emphasized reducing the dimensionality of the dataset. This was done using Random Forest's feature importance. It was of no surprise to see that features like snow, rain, and precipitation contributed least to the prediction of wildfires and therefore were ranked very low. Features like evapotranspiration (a feature that incorporates temperature, wind speed, humidity, and solar radiation), soil temperature, etc., were ranked high.</p>
                 
                 <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
-                    <img src="./Results/Random Forest/feature_importance1.png" alt="Feature Importance1">
-                    <img src="./Results/Random Forest/feature_importance2.png" alt="Feature Importance2">
+                    <img src="./Results/random forest/feature_importance1.png" alt="Feature Importance1">
+                    <img src="./Results/random forest/feature_importance2.png" alt="Feature Importance2">
                 </div>
 
                 <h3>Model Evaluation and Cross-Validation</h3>
@@ -970,8 +970,8 @@
                 <h4>Key Hyperparameters Tuned:</h4>
 
                 <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
-                    <img src="./Results/Random Forest/tuned_hyperparameters.png" alt="Hyperparameters Tuned" style="flex: 1; max-width: 45%;">
-                    <img src="./Results/Random Forest/best_hyperparameters.png" alt="Best Hyperparameter Values" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/random forest/tuned_hyperparameters.png" alt="Hyperparameters Tuned" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/random forest/best_hyperparameters.png" alt="Best Hyperparameter Values" style="flex: 1; max-width: 45%;">
                 </div>
 
                 <ul>
@@ -987,8 +987,8 @@
                 <p>After obtaining the best hyperparameters for the wildfire prediction model, we split the dataset into 80% train and 20% test. We then trained a Random Forest Classification Model. The classification metrics and AUC-ROC score obtained are shown below.</p>
                 
                 <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
-                    <img src="./Results/Random Forest/conf_matrix.png" alt="Confusion Matrix" style="flex: 1; max-width: 45%;">
-                    <img src="./Results/Random Forest/roc_auc_curve.png" alt="ROC-AUC Curve" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/random forest/conf_matrix.png" alt="Confusion Matrix" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/random forest/roc_auc_curve.png" alt="ROC-AUC Curve" style="flex: 1; max-width: 45%;">
                 </div>
 
                 <h3>Model Performance</h3>
@@ -1041,10 +1041,10 @@
                 <p>For our baseline model, we performed 5-fold cross-validation, achieving a mean accuracy of 82.3%. On the training data, the baseline model achieved an accuracy of 86.79%. However, false positives were high on the test data, where the model incorrectly predicted wildfire occurrences in non-fire scenarios.</p>
                 
                 <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
-                    <img src="./Results/xgboost/baseline_cv_scores.png" alt="Baseline Model Cross-Validation Scores">
-                    <img src="./Results/xgboost/baseline_results.png" alt="Baseline Model Results">
+                    <img src="./Results/xgboost/baseline_cv_scores.png" alt="Baseline Model Cross-Validation Scores" style="width: 45%; object-fit: contain;">
+                    <img src="./Results/xgboost/baseline_results.png" alt="Baseline Model Results" style="width: 45%; object-fit: contain;">
                 </div>
-
+                
                 <h3>Hyperparameter Tuning with Bayesian Optimization</h3>
                 <p>To optimize the XGBoost model, we used <strong>Bayesian Optimization</strong>, a hyperparameter tuning technique that efficiently explores the hyperparameter space by modeling the relationship between hyperparameters and the model's performance using a probabilistic surrogate function.</p>
                 <p>Unlike grid or random search, Bayesian Optimization:</p>
