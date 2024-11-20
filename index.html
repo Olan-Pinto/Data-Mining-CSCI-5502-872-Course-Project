@@ -751,9 +751,483 @@
 
         <div id="models-implemented" class="tab-content">
             <h1>Models Implemented</h1>
-            <p>No content required for Milestone 1.</p>
-        </div>
+            <p>Now that we have our training data ready, it is critical to use this data to build a predictive model. The goal behind this predictive analysis is that, given a weather forecast for a given region in California, our model will predict whether or not a wildfire is likely to happen in the near future. Predicting wildfires falls into the category of supervised machine learning algorithms, specifically a binary classification problem.</p>
+            <p>For the purpose of this project, we developed 8 machine learning models:</p>
+            <ol>
+                <li>Logistic Regression</li>
+                <li>Decision Tree</li>
+                <li>Support Vector Machine</li>
+                <li>Random Forest</li>
+                <li>LightGBM</li>
+                <li>XGBoost</li>
+                <li>K-Nearest Neighbors</li>
+                <li>Naive Bayes Classifier</li>
+            </ol>
+            <p>Every model developed has undergone feature selection, feature engineering, K-Fold Cross Validation, hyperparameter tuning, model building, and evaluation metrics. We will now discuss in detail all the steps carried out for each of the 8 models.</p>
+            
+            <section id="Logistic Regression">
+                <h2>Logistic Regression</h2>
+                <p>The basic assumption of a Logistic Regression Classifier is that every feature or attribute used to model should be independent. In other words, there should not be any multicollinearity between the variables. Therefore, as part of building this model, we removed all variables that were highly correlated with each other (as seen in the image below).</p>
+                <div class="image-container">
+                    <img src="./Results/logistic regression/highly_correlated_features.png" alt="Highly Correlated Features">
+                </div>
+                <p>As part of the feature engineering process, we discretized every attribute by using the Standard Scaler. This process converts each feature attribute to a standard normal distribution with a mean of 0 and variance of 1.</p>
+                
+                <p>The next step was to validate the model. This is a crucial step before building any machine learning model as it helps prevent overfitting. By applying K-Fold Cross Validation on 5 different sets, we obtained a mean accuracy score of 0.583, which is poor as it is barely better than randomly guessing any class.</p>
+                
+                <p>To address this, we further tuned the hyperparameters of the logistic regression model using a Python library called HyperOpt. This library automates the process of finding the best combination of hyperparameters, which can improve the model's performance. HyperOpt randomly samples hyperparameters from a defined search space (shown in the image below) and uses a probabilistic model-based optimization technique that balances exploration and exploitation.</p>
+                <div class="image-container">
+                    <img src="./Results/logistic regression/hyperparamater_tuning.png" alt="Hyperparameter Tuning">
+                </div>
+                <p>After fitting the model onto an objective function to improve accuracy, we obtained the best hyperparameters of the model to be:</p>
+                <ul>
+                    <li>C = 0.01667000925475309</li>
+                    <li>max_iter = 200</li>
+                    <li>solver = 'liblinear'</li>
+                    <li>penalty = 'l2'</li>
+                </ul>
+                <p>'C' here is the inverse of regularization (1/lambda). A small C value indicates stronger regularization, which adds a large penalty to strong coefficients to reduce overfitting or increase underfitting. Max_iter = 200 indicates the algorithm’s threshold for the number of iterations before the optimization algorithm converges. 'Liblinear' is a solver based on the coordinate descent algorithm. The 'penalty' indicates the type of regularization applied to the model. L1 is Lasso, L2 is Ridge, and Elastic Net is a mix of both.</p>
+                
+                <p>We then split the entire dataset into train and test sets (80% for training and 20% for testing) and built the Logistic Regression model using the best hyperparameters obtained. Despite this, we achieved only an accuracy score of 0.59, with the confusion matrix shown below. The AUC-ROC score, which helps describe the model's ability to distinguish between classes, was also only 0.62.</p>
+                
+                <p>These results indicate a major limitation of the Logistic Regression model: it relies on the data being linearly separable, which was not the case with this wildfire prediction data.</p>
+    
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <div style="flex: 1; max-width: 45%; text-align: center;">
+                        <img src="./Results/logistic regression/conf_matrix.png" alt="Confusion Matrix" style="width: 100%;">
+                        <p class="caption">Confusion Matrix showing the performance of the Logistic Regression model.</p>
+                    </div>
+                    <div style="flex: 1; max-width: 45%; text-align: center;">
+                        <img src="./Results/logistic regression/roc_auc.png" alt="ROC-AUC Curve and Score" style="width: 100%;">
+                        <p class="caption">ROC-AUC curve and score indicating the model's ability to distinguish between classes.</p>
+                    </div>
+                </div>
+                <!-- <h3>Improving the Model</h3>
+                <p>To enhance the dataset's predictive power, we identified and removed features with high correlation using a threshold of 0.9 to address multicollinearity. We also dropped features with low importance based on the feature importance scores generated by the model.</p>
+                
+                <p>After separating the features from the target variable, we performed an 80:20 train-test split on the data. We then applied the StandardScaler to standardize the numerical features, ensuring they follow a standard normal distribution with a mean of 0 and variance of 1.</p>
+                
+                <p>If you observe closely, we used <code>fit_transform</code> on the X_train data and <code>transform</code> on the X_test data. This is because <code>fit_transform</code> calculates the mean and standard deviation of the training data and uses them to scale the features. Once the scaling parameters are calculated from the training data, we apply <code>transform</code> to the test data using the same parameters, ensuring consistency and avoiding data leakage where test data could influence the model's learning.</p> -->
+            
+                <!-- Improved image layout using Flexbox -->
+            </section>
+            <section id="decision tree">
+                <h2>Decision Tree</h2>
+                <p>A Decision Tree is a supervised machine learning algorithm used for classification and regression tasks. It makes decisions based on a tree-like structure where each node represents a decision made on an attribute and the edges represent the possible outcomes. There are three main components of the tree:</p>
+                <ul>
+                    <li><strong>Root Node:</strong> The topmost node that contains the entire dataset, and from which the first decision is made.</li>
+                    <li><strong>Decision Nodes:</strong> These nodes split the data based on feature values (e.g., "Is age > 30?").</li>
+                    <li><strong>Leaf Nodes:</strong> The final decision or prediction is made at the leaf node.</li>
+                </ul>
+                <p>At each decision node, the algorithm chooses the best feature based on a criterion like Gini impurity or information gain. This process is repeated recursively for each subset of data until a stopping condition is met. During predictions, the data flows through the tree based on the feature values, and the final output is made by the leaf node it ends up in.</p>
+            
+                <p>The baseline Decision Tree model performed decently, but we improved its performance by tuning its hyperparameters.</p>
+                
+                <div class="image-container">
+                    <img src="./Results/decision tree/training_acc.png" alt="Baseline Training Acc">
+                    <img src="./Results/decision tree/baseline_results.png" alt="Baseline Model Results">
+                </div>
+                            
+                <h3>Hyperparameter Tuning with Optuna</h3>
+                <p>We used <strong>Optuna</strong> to perform hyperparameter tuning to find the best Decision Tree model. Optuna is a hyperparameter optimization framework designed for automatic and efficient tuning of machine learning models. It uses algorithms to intelligently explore the hyperparameter space, identifying the optimal combination of parameters that maximizes a specific metric. Optuna supports techniques like Bayesian optimization and Tree-structured Parzen Estimators (TPE). This reduces computational costs compared to grid or random search, especially for complex models like Decision Trees.</p>
+            
+                <p>For this tuning, we defined an objective function in which Optuna evaluates different combinations of hyperparameters for a Decision Tree model. The function computes the model’s performance on a cross-validation (CV) set and returns the mean accuracy score.</p>
+            
+                <h3>Hyperparameters Tuned</h3>
+                <ul>
+                    <li><strong>max_depth:</strong> Controls the maximum depth of the decision tree. A larger value will allow the tree to grow deeper to capture more complex patterns. However, deeper trees may lead to overfitting. Limiting the depth helps prevent overfitting.</li>
+                    <li><strong>min_samples_split:</strong> Specifies the minimum number of samples required to split an internal node. Higher values prevent the model from learning overly specific patterns and reduce overfitting by making splits more conservative.</li>
+                    <li><strong>min_samples_leaf:</strong> Defines the minimum number of samples required to be at a leaf node. Higher values ensure that leaves contain more data points, which helps the model avoid overfitting by reducing the chance of learning from outliers or noise.</li>
+                    <li><strong>max_features:</strong> Specifies the number of features to consider when looking for the best split. It helps control the complexity of the tree. Lower values can prevent overfitting by making the tree less sensitive to the data, while higher values allow more features for each split, increasing complexity.</li>
+                    <li><strong>ccp_alpha:</strong> This parameter is used for cost-complexity pruning. It controls the pruning of the tree after it is fully grown. Larger values of ccp_alpha lead to more aggressive pruning, which can help simplify the tree and reduce overfitting. A smaller value allows the tree to grow deeper and potentially overfit the training data.</li>
+                    <li><strong>criterion:</strong> The criterion parameter specifies the function used to measure the quality of a split. 'gini' is the Gini impurity, while 'entropy' uses the information gain from the data. Both criteria aim to reduce impurity in the nodes. This choice can influence the model's performance but both perform equally well in most cases.</li>
+                </ul>
+            
+                <p>We conducted an Optuna study with 200 trials to find the optimal hyperparameter combinations that maximize cross-validation accuracy.</p>
+                <div class="image-container">
+                    <img src="./Results/decision tree/hyperparameter_tuning.png" alt="Hyperparameter Tuning">
+                    <img src="./Results/decision tree/best_hyperparameters_clean.png" alt="Best Hyperparameters">
+                    <img src="./Results/decision tree/tuned_model_cv_scores.png" alt="Tuned Model Cross-Validation Scores">
+                </div>
+                <h3>Model Performance After Hyperparameter Tuning</h3>
+                <p>Below are the results of the new model. It is evident that the training accuracy has decreased compared to the baseline model, indicating that the new model is less overfitted.</p>
+                
+                <div class="image-container">
+                    <img src="./Results/decision tree/tuned_training_acc.png" alt="Tuned Training Accuracy">
+                    <img src="./Results/decision tree/tuned_results.png" alt="Tuned Results">
+                </div>
 
+                <p>After hyperparameter tuning, the new model showed the following improvements compared to the baseline model:</p>
+                <ul>
+                    <li><strong>Accuracy:</strong> Increased, reflecting better overall performance.</li>
+                    <li><strong>Precision:</strong> Improved, showing the model is more accurate in predicting positives.</li>
+                    <li><strong>F1 Score:</strong> Improved, indicating a better balance between precision and recall.</li>
+                </ul>
+            
+                <p>However, recall decreased slightly, suggesting a trade-off in performance. Specifically:</p>
+                <ul>
+                    <li><strong>True Positives:</strong> Increased, indicating the model is better at identifying actual positive instances.</li>
+                    <li><strong>False Negatives:</strong> Decreased, showing the model is less likely to miss positive instances.</li>
+                    <li><strong>True Negatives:</strong> Decreased, indicating that the model is more aggressive in predicting positives, which may increase false positives.</li>
+                </ul>
+            
+                <p>The overall performance indicates that while the tuned model is better at detecting positives, it has become slightly more prone to false positives. This reflects a shift in the model’s balance toward identifying positive instances more frequently.</p>
+            
+                <h3>Feature Importances and ROC-AUC Evaluation</h3>
+                <p>To further understand the tuned model's performance, we analyzed the feature importances and evaluated the model's effectiveness using the ROC-AUC curve.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/decision tree/feature_importance1.png" alt="Feature Importance" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/decision tree/roc_auc.png" alt="ROC-AUC Curve and Score" style="flex: 1; max-width: 45%;">
+                </div>
+            </section>
+
+            <section id="svm">
+                <h2>Support Vector Machine (SVM)</h2>
+                <p>SVM is a supervised learning algorithm used for classification tasks. It finds the optimal hyperplane that best separates the data points of different classes in a high-dimensional feature space. The objective of SVM is to maximize the margin, which is the distance between the hyperplane and the nearest data points (support vectors) from each class. This margin maximization ensures better generalization to unseen data.</p>
+                
+                <p>SVM can effectively handle linear and non-linear classification by using kernel functions, which map the data into higher-dimensional spaces where a linear hyperplane can separate the classes. The ability to transform data using kernels makes SVM powerful for solving complex classification problems.</p>
+            
+                <h3>Baseline Model Performance</h3>
+                <p>The baseline SVM model was evaluated using standard metrics. However, the results show that the model struggled, with a significant number of false positives, where it incorrectly classified non-target instances as target instances. This highlights the challenges of the baseline SVM model in capturing the underlying patterns effectively.</p>
+                <p><strong>Computational Complexity:</strong> SVMs are computationally expensive for large datasets and complex kernel functions. Training involves solving a quadratic optimization problem, which scales poorly with the number of data samples. This makes SVM less suitable for massive datasets unless simpler approximations like Linear SVM are used. The high computational cost is a trade-off for SVM’s ability to handle non-linear, separable data.</p>
+                
+                <div class="image-container">
+                    <img src="./Results/SVM/baseline_train_acc.png" alt="Baseline Training Accuracy">
+                    <img src="./Results/SVM/baseline_eval.png" alt="Baseline Model Results">
+                </div>
+    
+                <h3>Hyperparameter Tuning with RandomizedSearchCV</h3>
+                <p>We performed randomized search using RandomizedSearchCV, which is a hyperparameter tuning method that randomly samples from the hyperparameter space. Unlike GridSearchCV, which searches through all possible combinations of hyperparameters, RandomizedSearchCV randomly samples a fixed number of combinations from the hyperparameter space and evaluates them.</p>
+            
+                <p><strong>Key Parameters in RandomizedSearchCV:</strong></p>
+                <ul>
+                    <li><strong>param_dist:</strong> A dictionary of hyperparameters from which random values are sampled.</li>
+                    <li><strong>n_iter:</strong> The number of hyperparameter combinations to evaluate.</li>
+                    <li><strong>cv:</strong> Number of cross-validation folds (cv=3 for 3-fold cross-validation).</li>
+                    <li><strong>n_jobs:</strong> Number of CPU cores used for parallel computation (n_jobs=-1 utilizes all available cores for efficiency).</li>
+                </ul>
+            
+                <h3>Tuned Hyperparameters</h3>
+
+                <div class="image-container">
+                    <img src="./Results/SVM/hyperparameter_tuning.png" alt="Hyperparameters">
+                </div>
+
+                <ul>
+                    <li><strong>C (Penalty parameter):</strong> Controls the trade-off between a smooth decision boundary and correct classification of training examples.</li>
+                    <li><strong>gamma (Kernel coefficient):</strong> Defines the influence of individual training examples on the decision boundary.</li>
+                    <li><strong>kernel (Kernel function):</strong> Specifies the type of decision boundary to use for data separation (e.g., 'linear', 'rbf', 'poly').</li>
+                    <li><strong>degree (Degree of the polynomial kernel):</strong> Determines the degree of the polynomial used for the decision boundary (only applicable for 'poly' kernel).</li>
+                    <li><strong>tol (Tolerance for stopping criterion):</strong> Controls the tolerance for optimization and stopping criteria.</li>
+                    <li><strong>shrinking (Shrinking heuristic):</strong> Boolean parameter that determines whether the shrinking heuristic is applied.</li>
+                </ul>
+            
+                <h3>Results After Tuning</h3>
+
+                <div class="image-container">
+                    <img src="./Results/SVM/best_hyperparameters.png" alt="Hyperparameter tuning results">
+                    <p class="caption">These are the best hyperparameters obtained after tuning.</p>
+                </div>
+
+                <p>Below are the results of the tuned model on the training and testing data. We can see an improvement in the training accuracy</p>
+
+                <div class="image-container">
+                    <img src="./Results/SVM/tuned_model_training_acc.png" alt="Tuned model training accuracy">
+                    <img src="./Results/SVM/tuned_model_results.png" alt="Tuned model testing accuracy">
+                </div>
+
+                <p>After hyperparameter optimization using RandomizedSearchCV, the SVM model demonstrated significant improvement across all evaluation metrics:</p>
+                <ul>
+                    <li><strong>Recall:</strong> Improved notably, indicating the model’s improved ability to correctly identify positive instances.</li>
+                    <li><strong>False Positives:</strong> Reduced, though they remain a concern, suggesting that the model still struggles with balancing precision and recall.</li>
+                </ul>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/SVM/feature_importance.png" alt="Feature Importance" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/SVM/roc_auc_curve.png" alt="ROC-AUC Curve and Score" style="flex: 1; max-width: 45%;">
+                </div>
+    
+                <p>The tuned model’s performance validates the effectiveness of hyperparameter tuning in addressing SVM's sensitivity to data and parameter configurations. While the false positive rate remains an area for improvement, the overall enhancements in metrics demonstrate the value of careful optimization.</p>
+            </section>       
+            <section id="random-forest">
+                <h2>Random Forest</h2>
+                <p>Random Forest is an ensemble method that builds upon multiple decision trees during training and then combines their results for better predictions, making it robust. The biggest advantage of Random Forests over Decision Trees is that they generally have the same bias but lower variance than a single predictor. Another feature of Random Forest is its ability to create a feature importance table, which looks at how much the tree nodes that use that feature reduce impurity on average.</p>
+                
+                <p>When building a Random Forest Model for the purpose of wildfire prediction, we emphasized reducing the dimensionality of the dataset. This was done using Random Forest's feature importance. It was of no surprise to see that features like snow, rain, and precipitation contributed least to the prediction of wildfires and therefore were ranked very low. Features like evapotranspiration (a feature that incorporates temperature, wind speed, humidity, and solar radiation), soil temperature, etc., were ranked high.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/Random Forest/feature_importance1.png" alt="Feature Importance1">
+                    <img src="./Results/Random Forest/feature_importance2.png" alt="Feature Importance2">
+                </div>
+
+                <h3>Model Evaluation and Cross-Validation</h3>
+                <p>Similar to the models above, we performed a 5-fold cross-validation to prevent the chance of overfitting. The mean accuracy score obtained was 0.835, which indicates that this model promises to generalize really well on average. For this model, we explored <strong>Optuna</strong>, an open-source hyperparameter tuning Python library. It employs techniques like Bayesian Optimization, Tree Structured Parzen Estimators (TPE), and random search. Not only this, Optuna also allows users to define an objective function, which optimizes through iterative trials.</p>
+            
+                <h3>Hyperparameter Tuning with Optuna</h3>
+                <p>The images below show the search space initialized for Optuna’s objective function and the best set of hyperparameters obtained after 50 trials.</p>
+            
+                <h4>Key Hyperparameters Tuned:</h4>
+
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/Random Forest/tuned_hyperparameters.png" alt="Hyperparameters Tuned" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/Random Forest/best_hyperparameters.png" alt="Best Hyperparameter Values" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <ul>
+                    <li><strong>n_estimators:</strong> The number of decision trees in the forest. The fewer the trees, the less variance, but computational time can increase.</li>
+                    <li><strong>max_depth:</strong> The maximum depth of each decision tree. Larger values can fit complex hidden patterns but may lead to overfitting.</li>
+                    <li><strong>min_samples_split:</strong> The minimum number of samples needed to split an internal node. High values indicate that nodes have sufficient data before splitting, which can help prevent overfitting.</li>
+                    <li><strong>min_samples_leaf:</strong> The minimum number of samples required to be present in a leaf node. This helps prevent overfitting by ensuring that leaves have sufficient data.</li>
+                    <li><strong>max_features:</strong> 'sqrt' is an algorithm that considers the square root of the total number of features at each split.</li>
+                    <li><strong>criterion:</strong> The function used to measure the quality of a split, either Gini impurity or entropy.</li>
+                </ul>
+            
+                <h3>Results After Hyperparameter Optimization</h3>
+                <p>After obtaining the best hyperparameters for the wildfire prediction model, we split the dataset into 80% train and 20% test. We then trained a Random Forest Classification Model. The classification metrics and AUC-ROC score obtained are shown below.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/Random Forest/conf_matrix.png" alt="Confusion Matrix" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/Random Forest/roc_auc_curve.png" alt="ROC-AUC Curve" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <h3>Model Performance</h3>
+                <p>This model performed really well at accurately predicting wildfires. Not only did it achieve a good accuracy score, but it also received an excellent ROC score, indicating that the model can effectively distinguish between wildfire occurrences and non-occurrences.</p>
+            </section>
+            <section id="light-gbm">
+                <h2>Light GBM</h2>
+                <p>Light GBM (Gradient Boosting Machine) is a newer variation of Gradient Boosting Algorithms developed by Microsoft. It was designed for high-performing machine learning problems, particularly in situations where training speed, memory efficiency, and scalability are critical. Like other models, we developed a K-Fold Cross Validation methodology to evaluate how well the model generalized on average and to check if the model had high variance on the test set. We obtained an accuracy score of 0.79 across the 5 folds, indicating that the model performed fairly well across multiple subsets of the dataset.</p>
+                
+                <h3>Hyperparameter Tuning with RandomizedSearchCV</h3>
+                <p>We then performed hyperparameter tuning using <strong>RandomizedSearchCV</strong>. This algorithm randomly selects a combination of hyperparameters and evaluates their performance, offering a much more efficient way than performing GridSearchCV. This optimization algorithm helped us find the best set of hyperparameters.</p>
+            
+                <div class="image-container">
+                    <img src="./Results/Light GBM/best_hyperparameters.png" alt="Confusion Matrix">
+                </div>
+
+                <h4>Key Hyperparameters Tuned:</h4>
+                <ul>
+                    <li><strong>colsample_bytree:</strong> This parameter gives us the fraction of features to sample to build each tree. In this case, 84% of features are randomly selected for each tree.</li>
+                    <li><strong>learning_rate:</strong> This parameter controls how fast or slow the model converges to the optimal solution. A low value increases computation time, while a high learning rate can overshoot the optimal solution.</li>
+                    <li><strong>max_depth:</strong> The maximum depth of each tree, which helps in controlling the complexity of the model.</li>
+                    <li><strong>min_child_samples:</strong> The minimum number of samples required in a child node. A higher value prevents the model from creating overly specific trees and helps with regularization.</li>
+                    <li><strong>n_estimators:</strong> The number of trees in the ensemble model.</li>
+                    <li><strong>num_leaves:</strong> The number of leaves in each tree. This affects the complexity of the trees and the ability of the model to capture intricate patterns.</li>
+                    <li><strong>reg_alpha:</strong> The L1 (Lasso) regularization term on leaf weights, which adds a penalty for large weights to reduce the risk of overfitting.</li>
+                    <li><strong>reg_lambda:</strong> The L2 (Ridge) regularization term on leaf weights, which is similar to reg_alpha but squared.</li>
+                    <li><strong>subsample:</strong> This parameter indicates that about 62% of the data samples were used to train each tree. This helps prevent overfitting and increases the robustness of the ensemble method.</li>
+                </ul>
+            
+                <h3>Model Performance</h3>
+                <p>Similar to the models described above, the Light GBM model was trained using the best hyperparameters obtained. The images below show that ensemble methods, in general, are better at capturing the essence of predicting wildfires compared to distance-based or linear models.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/Light GBM/conf_matrix.png" alt="Confusion Matrix" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/Light GBM/roc_auc_curve.png" alt="ROC-AUC Curve" style="flex: 1; max-width: 45%;">
+                </div>
+            
+            </section>
+            <section id="xgboost">
+                <h2>Extreme Gradient Boosting (XGBoost)</h2>
+                <p>XGBoost is a machine learning algorithm based on gradient boosting, designed for both regression and classification tasks. It builds decision trees sequentially, where each new tree tries to correct the errors made by the previous ones. The final prediction is a combination of all the trees, which helps provide high accuracy and robustness.</p>
+                
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Regularization:</strong> XGBoost supports both L1 and L2 regularization to control the complexity of the model and reduce overfitting.</li>
+                    <li><strong>Pruning:</strong> XGBoost uses tree pruning to stop tree splitting when further splits do not improve performance. This improves computational efficiency and prevents unnecessary complexity.</li>
+                </ul>
+            
+                <h3>Baseline Model</h3>
+                <p>For our baseline model, we performed 5-fold cross-validation, achieving a mean accuracy of 82.3%. On the training data, the baseline model achieved an accuracy of 86.79%. However, false positives were high on the test data, where the model incorrectly predicted wildfire occurrences in non-fire scenarios.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/xgboost/baseline_cv_scores.png" alt="Baseline Model Cross-Validation Scores">
+                    <img src="./Results/xgboost/baseline_results.png" alt="Baseline Model Results">
+                </div>
+
+                <h3>Hyperparameter Tuning with Bayesian Optimization</h3>
+                <p>To optimize the XGBoost model, we used <strong>Bayesian Optimization</strong>, a hyperparameter tuning technique that efficiently explores the hyperparameter space by modeling the relationship between hyperparameters and the model's performance using a probabilistic surrogate function.</p>
+                <p>Unlike grid or random search, Bayesian Optimization:</p>
+                <ul>
+                    <li>Learns from previous evaluations and identifies the most promising regions of the search space for further exploration.</li>
+                    <li>Balances exploration and exploitation, iteratively selecting new hyperparameters to maximize performance while minimizing unnecessary evaluations.</li>
+                </ul>
+                <p>We utilized <strong>BayesSearchCV</strong> from the scikit-optimize library, which combines Bayesian Optimization with cross-validation for hyperparameter tuning. The process started with random samples, and subsequent iterations used prior results to intelligently select new hyperparameters.</p>
+            
+                <h3>Hyperparameters Tuned</h3>
+
+                <div class="image-container">
+                    <img src="./Results/xgboost/hyperparameters_tuned.png" alt="Hyperparameters Tuned">
+                    <p class="caption">These are the hyperparameters that were tuned</p>
+                </div>
+                
+                <ul>
+                    <li><strong>learning_rate:</strong> Determines the size of the steps during each boosting round. Lower values lead to slower learning but often result in a more accurate model, while higher values risk overshooting the optimal solution.</li>
+                    <li><strong>n_estimators:</strong> Specifies the number of boosting rounds (trees) in the model. More estimators allow the model to learn more but increase training time and risk overfitting.</li>
+                    <li><strong>max_depth:</strong> The maximum depth of each decision tree. Deeper trees allow the model to learn more complex patterns but may lead to overfitting.</li>
+                    <li><strong>subsample:</strong> Determines the fraction of training samples used to grow each tree. Lower values add randomness, reducing overfitting but possibly underfitting the data.</li>
+                    <li><strong>colsample_bytree:</strong> Specifies the fraction of features used when constructing each tree. Lower values reduce feature dependency, preventing overfitting.</li>
+                    <li><strong>gamma:</strong> Sets the minimum reduction in loss required to make a further split on a node. Higher values make the model more conservative, requiring larger reductions in loss before splitting.</li>
+                </ul>
+            
+                <div class="image-container">
+                    <img src="./Results/xgboost/best_hyperparameters.png" alt="Best Hyperparameter Values">
+                    <img src="./Results/xgboost/tuned_model_cv_scores.png" alt="Tuned Model Cross-Validation Score">
+                </div>
+
+                <h3>Model Performance</h3>
+                <p>After tuning, the model achieved a training accuracy of 97.81%. On the test dataset, the results showed significant improvement over the baseline model:</p>
+                <ul>
+                    <li><strong>Accuracy:</strong> Improved, reflecting better overall performance.</li>
+                    <li><strong>True Positives:</strong> Improved, indicating better detection of actual wildfire occurrences.</li>
+                    <li><strong>False Positives:</strong> Reduced, demonstrating a better balance in predictions compared to the baseline.</li>
+                </ul>
+                
+                <p>Despite the improvements, the model is still slightly biased toward predicting wildfire occurrences, leading to occasional false positives. This trade-off highlights the challenge of balancing the detection of true positives while minimizing false positives.</p>
+                <p>We used the AUC-ROC score and the ROC curve to assess the model's performance. These metrics provide insights into the trade-offs between sensitivity (recall) and specificity across different classification thresholds, enabling a comprehensive evaluation of the model's predictive capability.</p>
+
+                <div class="image-container">
+                    <img src="./Results/xgboost/roc_curve.png" alt="AUC-ROC Curve">
+                </div>
+
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/xgboost/feature importance1.png" alt="Feature Importance 1" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/xgboost/feature_importance2.png" alt="Feature Importance 2" style="flex: 1; max-width: 45%;">
+                </div>
+            
+            </section>
+            <section id="knn">
+                <h2>K-Nearest Neighbors (KNN)</h2>
+                <p>K-Nearest Neighbors (KNN) is a simple machine learning algorithm that predicts the class of a data point based on its closest neighbors. The performance of KNN heavily depends on selecting the right number of neighbors (k) and the distance metric used to measure similarity.</p>
+            
+                <h3>Baseline Model Performance</h3>
+                <p>The training accuracy of the baseline KNN model was 84.2%, while the test accuracy was 77.21%. The confusion matrix and classification metrics revealed areas for improvement, particularly in balancing recall and precision.</p>
+            
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/knn/baseline_training_acc.png" alt="Baseline Training Accuracy" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/knn/baseline_test_metrics.png" alt="Baseline Testing Metrics" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <div class="image-container">
+                    <img src="./Results/knn/baseline_conf_matrix.png" alt="Baseline Confusion Matrix">
+                </div>
+
+                <h3>Hyperparameter Tuning with Bayesian Optimization</h3>
+                <p>The KNN algorithm's key parameters include:</p>
+                <ul>
+                    <li><strong>n_neighbors:</strong> Determines how many neighbors to consider. Larger values create smoother decision boundaries, while smaller values capture finer patterns but may lead to overfitting.</li>
+                    <li><strong>weights:</strong> Decides whether all neighbors contribute equally (uniform) or if closer neighbors have more influence (distance).</li>
+                    <li><strong>metric:</strong> Specifies the distance metric (e.g., Euclidean, Manhattan, Minkowski) used to calculate distances between points.</li>
+                </ul>
+                <p>To optimize the KNN model, we used Bayesian Optimization with <strong>BayesSearchCV</strong>, fine-tuning parameters such as n_neighbors (1 to 20), weights (uniform or distance), and metric (Euclidean, Manhattan, or Minkowski). The optimization process ran for 50 iterations with 5-fold cross-validation to ensure robustness.</p>
+            
+                <h3>Optimized Model Performance</h3>
+                <p>After hyperparameter tuning, the best configuration was:</p>
+                <ul>
+                    <li><strong>n_neighbors:</strong> 5</li>
+                    <li><strong>weights:</strong> distance</li>
+                    <li><strong>metric:</strong> Manhattan</li>
+                </ul>
+                
+                <div class="image-container">
+                    <img src="./Results/knn/tuned_model_metrics.png" alt="Tuned Model Metrics" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/knn/tuned_model_classification_report.png" alt="Tuned Model Classification Report" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <p>This optimized configuration boosted the model's performance, achieving the following results:</p>
+                <ul>
+                    <li><strong>Test Accuracy:</strong> 79.40%</li>
+                    <li><strong>Precision:</strong> 75.91%</li>
+                    <li><strong>Recall:</strong> 86.82%</li>
+                    <li><strong>F1-Score:</strong> 81.00%</li>
+                </ul>
+                <p>The optimized KNN model effectively balances simplicity, complexity, and accuracy, making it a reliable choice for wildfire prediction.</p>
+            
+                <h3>Confusion Matrix and Misclassifications</h3>
+
+                <div class="image-container">
+                    <img src="./Results/knn/tuned_model_conf_matrix.png" alt="Tuned Model Confusion Matrix">
+                </div>
+
+                <p>After tuning, the model correctly identified:</p>
+                <ul>
+                    <li><strong>True Negatives:</strong> 8,084</li>
+                    <li><strong>True Positives:</strong> 10,003</li>
+                </ul>
+                <p>However, it misclassified:</p>
+                <ul>
+                    <li><strong>False Positives:</strong> 3,174</li>
+                    <li><strong>False Negatives:</strong> 1,519</li>
+                </ul>
+            
+                <h3>Cross-Validation and AUC Score</h3>
+
+                <div class="image-container">
+                    <img src="./Results/knn/tuned_model_cv_scores.png" alt="Tuned Model CV Scores">
+                </div>
+
+                <p>The classification report reflects the precision, recall, and F1-score for the fine-tuned KNN model. It achieved an overall accuracy of 79%, with precision and recall values of 76% and 87% for class 1 (wildfire). The cross-validation scores across 5 folds ranged between 78.26% and 78.35%, confirming the model's consistency and reliability across different subsets of data.</p>
+                <p>With an <strong>AUC score of 0.87</strong>, the ROC curve reflects excellent discrimination, indicating that the fine-tuned KNN model effectively predicts wildfire occurrences with high confidence.</p>
+                
+                <div class="image-container">
+                    <img src="./Results/knn/tuned_model_auc_roc.png" alt="Tuned Model ROC-AUC">
+                </div>
+            
+            </section>
+            <section id="naive-bayes">
+                <h2>Naive Bayes</h2>
+                <p>Naive Bayes is a classification algorithm that uses Bayes' Theorem to predict outcomes. It assumes that all features are independent given the class label, making it computationally efficient and well-suited for high-dimensional datasets.</p>
+            
+                <h3>Baseline Model Performance</h3>
+                <p>Our Naive Bayes model leverages Bayes' theorem to predict the likelihood of wildfire occurrences. During the initial training phase, the model exhibited a training accuracy of 52.92%. The baseline confusion matrix highlighted some challenges, with:</p>
+                <ul>
+                    <li><strong>True Negatives:</strong> 1,897</li>
+                    <li><strong>True Positives:</strong> 10,261</li>
+                    <li><strong>False Positives:</strong> 9,361</li>
+                    <li><strong>False Negatives:</strong> 1,260</li>
+                </ul>
+
+                <div class="image-container">
+                    <img src="./Results/naive_bayes/baseline_training_acc.png" alt="Tuned Model ROC-AUC">
+                </div>
+
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/naive_bayes/baseline_conf_matrix.png" alt="Baseline Model Confusion Matrix" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/naive_bayes/baseline_classification_report.png" alt="Baseline Model Classification Report" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <p>The classification report further revealed a significant imbalance in the model’s predictions, with the precision and F1-scores for non-wildfire cases being notably lower.</p>
+            
+                <h3>Hyperparameter Tuning with Bayesian Optimization</h3>
+                <p>We focused on optimizing the <strong>var_smoothing</strong> parameter, which adds a small value to the variance of each feature to ensure stable probability calculations and avoid division by zero errors. Using Bayesian optimization, we explored different values for this parameter and selected the best-performing configuration.</p>
+                <p>We evaluated the model through 5-fold cross-validation to prevent overfitting and measure its generalizability. The model achieved a mean cross-validation accuracy of 57.71%, showing consistent performance across data splits. However, its overall performance was limited due to the complexity of the dataset, as indicated by an <strong>AUC-ROC score of 0.61</strong>.</p>
+            
+                <h3>Model Performance After Tuning</h3>
+                <p>While the model could distinguish between wildfire and non-wildfire cases, its predictions lacked precision. The <strong>var_smoothing</strong> parameter played a crucial role in stabilizing the model, as it helps prevent zero probabilities by adding a small value to the variance of each feature. However, higher smoothing values improve generalization, which may reduce the model's sensitivity to finer details in the data.</p>
+                <p>Despite using Bayesian optimization for fine-tuning, the post-tuning results remained consistent with the baseline, indicating that Naive Bayes' inherent simplicity might limit its ability to model complex relationships in this dataset.</p>
+                
+                <div class="image-container">
+                    <img src="./Results/naive_bayes/tuned_model_metrics.png" alt="Tuned Model ROC-AUC">
+                </div>
+
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/naive_bayes/baseline_conf_matrix.png" alt="Baseline Model Confusion Matrix" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/naive_bayes/tuned_model_classification_report.png" alt="Tuned Model Classification Report" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <h3>Final Results</h3>
+                <p>After tuning, the model's accuracy was 53.38%, with the same metrics for precision, recall, and F1-score as the baseline. The cross-validation scores were consistent, with a maximum accuracy of 57.71%, confirming the model's limitations.</p>
+                
+                <div class="image-container" style="display: flex; justify-content: space-between; gap: 20px;">
+                    <img src="./Results/naive_bayes/tuned_model_cv_scores.png" alt="Tuned Model Cross-validation Scores" style="flex: 1; max-width: 45%;">
+                    <img src="./Results/naive_bayes/tuned_model_roc_auc.png" alt="Tuned Model ROC-AUC" style="flex: 1; max-width: 45%;">
+                </div>
+
+                <h3>AUC-ROC Curve</h3>
+                <p>The AUC-ROC curve gave us an area under the curve of 0.61. While the model offers fast computation and simplicity, it’s clear that more advanced methods are needed to achieve higher performance on this task.</p>
+            </section>
+        </div>
+                
         <div id="conclusion-results" class="tab-content">
             <h1>Conclusion & Results</h1>
             <p>No content required for Milestone 1.</p>
